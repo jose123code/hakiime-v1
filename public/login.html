@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in with Bank OAuth</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0284c7;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-request {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 0.85rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0369a1;
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="logo">Central Bank Auth</div>
+        <div class="app-request">
+            <strong id="clientName">An App</strong> is requesting permission to access your banking identity.
+        </div>
+
+        <form id="authForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit">Authorize & Continue</button>
+            <div id="errorBox" class="error-msg"></div>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem;">
+            <span style="color: #64748b;">Don't have a bank account?</span><br>
+            <a href="/signup.html" style="color: #0284c7; text-decoration: none; font-weight: bold;">Create one here</a>
+        </div>
+
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientId = urlParams.get('client_id');
+        const redirectUri = urlParams.get('redirect_uri');
+        const codeChallenge = urlParams.get('code_challenge');
+        const codeChallengeMethod = urlParams.get('code_challenge_method');
+
+        if (clientId) {
+            document.getElementById('clientName').innerText = clientId;
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            document.getElementById('errorBox').style.display = 'none';
+
+            const response = await fetch('/oauth/authorize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    client_id: clientId,
+                    redirect_uri: redirectUri,
+                    response_type: 'code',
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value,
+                    code_challenge: codeChallenge,
+                    code_challenge_method: codeChallengeMethod
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.redirect_uri) {
+                const code = new URL(data.redirect_uri).searchParams.get('code');
+                window.location.href = `/?code=${code}`;
+            } else {
+                document.getElementById('errorBox').innerText = 'Authorization failed: ' + (data.error || 'Invalid credentials');
+                document.getElementById('errorBox').style.display = 'block';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

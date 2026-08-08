@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><%=  ProjectName %> Contact Us</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+<!-- Main content table -->
+<table width="100%" cellpadding="20" cellspacing="0"  >
+    <tr>
+        <td>
+            <h2><%= Title %></h2>
+            <p>Hello <%= ProjectName %>,</p>
+            <p>You have received a new message from <strong><%= userName %></strong>.</p>
+            <p><strong>Message:</strong></p>
+            <blockquote>
+                <%= Message %>
+            </blockquote>
+            <p>Sender Details:</p>
+            <ul>
+                <li><strong>Name:</strong> <%= userName %></li>
+                <li><strong>Email:</strong> <%= userEmail %></li>
+            </ul>
+            <p>Please review this message and reach out to the sender if needed.</p>
+            
+        </td>
+    </tr>
+</table>
+
+
+<!-- Footer table -->
+<table width="100%" cellpadding="20" cellspacing="0" bgcolor="#f4f4f4">
+    <tr>
+        <td>
+            <p style="color: #666;">© 2024 <%=  ProjectName %>. All rights reserved.</p>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

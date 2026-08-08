@@ -1,0 +1,15 @@
+pipelines:
+  branches:
+    '{release/0.2}':
+        - step:
+            runs-on:
+              - self.hosted
+              - linux.shell
+            deployment: Production
+            caches:
+              - composer
+            script:
+              - apt-get update
+              - apt-get -qq install git-ftp
+              - git ftp push --user $FTP_USER_S2 --passwd $FTP_PASSWORD_S2 ftp://$FTP_HOST_S2/$FTP_V1/micro-services
+              

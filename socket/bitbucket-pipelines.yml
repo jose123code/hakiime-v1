@@ -1,0 +1,34 @@
+pipelines:
+  branches:
+    master:
+      - step:
+          runs-on:
+            - self.hosted
+            - linux.shell
+          name: Deployment
+          deployment: Production
+          caches:
+            - node
+          script:
+            - apt-get update
+            - apt-get -qq install git-ftp
+            - git ftp push --user $FTP_USER_S2 --passwd $FTP_PASSWORD_S2 ftp://$FTP_HOST_S2/$FTP_V1/socket
+
+
+          # Add deployment commands here for Production
+          # Example: Deploy to a server using Git, SSH, or other deployment tools.
+          # Replace the placeholders with your actual deployment commands.
+
+    v1:
+      - step:
+          runs-on:
+            - self.hosted
+            - linux.shell
+          name: Deployment to V1
+          deployment: Production
+          caches:
+            - node
+          script:
+            - apt-get update
+            - apt-get -qq install git-ftp
+            - git ftp push --user $FTP_USER_S2 --passwd $FTP_PASSWORD_S2 ftp://$FTP_HOST_S2/$FTP_V1/socket

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Inquiry Received</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #fff;">
+        <img src="https://uhamatravel.com/Logo.png" alt="Uhama Travel Logo" style="max-width: 150px;">
+        
+        <h2 style="color: #007BFF;">New Inquiry Received</h2>
+        <p>Hello Uhama Travel Team,</p>
+        <p>A new inquiry has been submitted through the website. Here are the details:</p>
+        
+        <ul style="list-style-type: none; padding: 0;">
+            <li><strong>Name:</strong> <%= clientFirstName %> <%= clientLastName %></li>
+            <li><strong>Email:</strong> <%= clientEmail %></li>
+            <li><strong>Phone:</strong> <%= clientPhone %></li>
+            <li><strong>Number of Travelers:</strong> <%= numTravelers %></li>
+            <li><strong>Destination:</strong> <%= destination %></li>
+            <li><strong>How You Heard About Us:</strong> <%= howHeard %></li>
+        </ul>
+        
+        <h3>Client's Itinerary:</h3>
+        <p><%= itinerary %></p>
+        
+        <p>Please respond to the client as soon as possible.</p>
+        
+        <p>Best regards,<br>Uhama Travel</p>
+        <p>African Luxury Safaris<br>123 Safari St, Savanna City<br>555-123-4567<br>info@uhamatravel.com</p>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="#" style="text-decoration: none; color: #007BFF; margin: 0 5px;"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" style="text-decoration: none; color: #007BFF; margin: 0 5px;"><i class="fab fa-twitter"></i></a>
+            <a href="#" style="text-decoration: none; color: #007BFF; margin: 0 5px;"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</body>
+</html>

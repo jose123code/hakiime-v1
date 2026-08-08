@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Central Bank - Developer Portal</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 3rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #334155;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #38bdf8;
+            text-align: center;
+        }
+
+        p {
+            color: #94a3b8;
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0369a1;
+        }
+
+        #credentialsBox {
+            display: none;
+            margin-top: 1.5rem;
+            background: #020617;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #10b981;
+        }
+
+        .success-title {
+            color: #10b981;
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .cred-row {
+            margin-bottom: 1rem;
+        }
+
+        .cred-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cred-value {
+            font-family: monospace;
+            color: #34d399;
+            font-size: 0.95rem;
+            background: #0f172a;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #334155;
+            word-break: break-all;
+            margin-top: 0.25rem;
+        }
+
+        .warning {
+            font-size: 0.8rem;
+            color: #fbbf24;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .action-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h1>Developer Portal</h1>
+        <p>Register your application to access Central Bank's secure OAuth 2.0 API.</p>
+
+        <form id="devForm">
+            <div class="form-group">
+                <label>Application Name</label>
+                <input type="text" id="appName" placeholder="e.g., My Awesome Fintech App" required>
+            </div>
+            <div class="form-group">
+                <label>Redirect URI (Callback URL)</label>
+                <input type="url" id="redirectUri" value="http://localhost:5000/callback" required>
+            </div>
+            <button type="submit">Generate API Credentials</button>
+        </form>
+
+        <div id="credentialsBox">
+            <h3 class="success-title">App Registered Successfully</h3>
+            <div class="cred-row">
+                <div class="cred-label">Client ID</div>
+                <div class="cred-value" id="displayClientId"></div>
+            </div>
+            <div class="cred-row">
+                <div class="cred-label">Client Secret</div>
+                <div class="cred-value" id="displayClientSecret"></div>
+            </div>
+            <div class="cred-row">
+                <div class="cred-label">Authorized Redirect URI</div>
+                <div class="cred-value" id="displayRedirectUri"></div>
+            </div>
+            <div class="warning">Saved as the active Client ID in local storage for demo app testing!</div>
+            <a href="/" class="action-link">Go to Demo App & Test Login →</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('devForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('appName').value;
+            const redirectUri = document.getElementById('redirectUri').value;
+            const btn = e.target.querySelector('button');
+
+            btn.disabled = true;
+            btn.innerText = "Generating...";
+
+            try {
+                const response = await fetch('/register-client', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, redirectUri })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('active_client_id', data.clientId);
+                    localStorage.setItem('active_redirect_uri', data.redirectUri);
+
+                    document.getElementById('devForm').style.display = 'none';
+
+                    document.getElementById('displayClientId').innerText = data.clientId;
+                    document.getElementById('displayClientSecret').innerText = data.clientSecret;
+                    document.getElementById('displayRedirectUri').innerText = data.redirectUri;
+
+                    document.getElementById('credentialsBox').style.display = 'block';
+                } else {
+                    alert("Error: " + (data.error || "Could not register app"));
+                    btn.disabled = false;
+                    btn.innerText = "Generate API Credentials";
+                }
+            } catch (err) {
+                alert("Network error connecting to server.");
+                btn.disabled = false;
+                btn.innerText = "Generate API Credentials";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

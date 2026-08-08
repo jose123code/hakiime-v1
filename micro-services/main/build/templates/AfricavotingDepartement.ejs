@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><%=  ProjectName %> Nomination</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+<!-- Container table to center content -->
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#f4f4f4">
+    <tr>
+        <td align="center">
+            <!-- Header table with logo -->
+            <table width="600" cellpadding="0" cellspacing="0"  >
+                <tr>
+                    <td style="text-align: left;">
+                        <img src="<%=  Logo %>" alt="<%=  ProjectName %>" width="200">
+                    </td>
+                    <td style="text-align: right;">
+                        <p style="font-size: 18px; color: #ffcc00;"><%=  ProjectName %></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Second content table -->
+<table width="100%" cellpadding="20" cellspacing="0"  >
+    <tr>
+        <td>
+            <h2><%=  ProjectName %> - Nomination Details</h2>
+            <p>Hello <%=  ProjectName %> Department,</p>
+            <p>A nomination has been received for the <%=  ProjectName %>. Please find the details below:</p>
+            <ul>
+                <li><strong>User's Name:</strong> <%=  userName %></li>
+                <li><strong>Nominee's Name:</strong> <%=  nomineeName %></li>
+                <li><strong>Category:</strong> <%=  category %></li>
+                <li><strong>Reason for Nomination:</strong> <%=  reason %></li>
+            </ul>
+            <p>Please review this nomination and consider it for the upcoming awards.</p>
+            <p>For any inquiries or additional information, please contact the user at <%=  userEmail %>.</p>
+            <p>Best regards,</p>
+            <p>The <%=  ProjectName %> Team</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Footer table -->
+<table width="100%" cellpadding="20" cellspacing="0" bgcolor="#f4f4f4">
+    <tr>
+        <td>
+            <p style="color: #666;">© 2024 <%=  ProjectName %>. All rights reserved.</p>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

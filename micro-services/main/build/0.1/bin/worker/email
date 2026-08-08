@@ -1,0 +1,40 @@
+const { start: startCoreService } = require("../../core-service");
+const { sendEmail } = require("../../services");
+
+const mailing = async (emailInfo) => {
+  try {
+    const result = await sendEmail(
+      emailInfo.from,
+      emailInfo.to,
+      emailInfo.subject,
+      emailInfo.template,
+      emailInfo.variables
+    );
+    return result.messageId;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+// Function to send some messages before consuming the queue
+const sendEmailer = (channel, queueName) => {
+  channel.prefetch(1);
+  console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queueName);
+  channel.consume(queueName, function (msg) {
+    var emails = JSON.parse(msg.content.toString());
+    mailing(emails).then((res) => {
+      if (res) {
+        console.log(" [x] Done");
+        channel.ack(msg);
+      } else {
+        console.log(" [x] Failed"); 
+        channel.ack(msg); 
+      }
+    }); 
+  }, {
+    noAck: false
+  });
+};
+
+startCoreService(sendEmailer, 'mailer', 'worker');

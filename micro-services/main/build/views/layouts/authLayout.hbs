@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<!-- Seo Meta -->
+    <meta name="description" content="Admin panel | Dashboard">
+    <meta name="keywords" content="css3, html5">
+    <title>Auth</title>
+    <!-- Google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="/assets/vendors/bootstrap/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/vendors/remixicon/remixicon.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/vendors/quill/quill.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/vendors/select2/select2.min.css" type="text/css">
+
+    <!-- Main style -->
+    <link rel="stylesheet" href="/assets/css/styles.css" type="text/css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+         const socket = io('http://localhost:3000');
+    </script>
+</head>
+<body>
+     <!-- Loader -->
+    <div id="nsofts_loader">
+        <div class="text-center">
+            <i class="ri-3x ri-donut-chart-line nsofts-loader-icon"></i>
+            <span class="d-block">Loading</span>
+        </div>
+    </div>
+    {{{body}}}
+    
+  <!-- Vendor scripts -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="/assets/vendors/notify/notify.min.js"></script>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+
+    <!-- Main script -->
+    <script src="/assets/js/main.js"></script>
+    
+    
+    <script>
+        if (typeof window.load === 'function' && typeof window.load !== 'undefined') {
+            load();
+        }
+    </script>
+
+</body>
+</html>

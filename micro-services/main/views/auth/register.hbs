@@ -1,0 +1,87 @@
+    <main class="d-flex justify-content-center align-items-center py-5 min-vh-100">
+        <div class="container">
+            <div class="col-xl-4 col-lg-5 col-md-7 col-sm-9 mx-auto">
+                <div class="nsofts-auth position-relative">
+                    <img src="/assets/images/pattern-1.svg" class="nsofts-auth__pattern-1 position-absolute" alt="">
+                    <img src="/assets/images/pattern-2.svg" class="nsofts-auth__pattern-2 position-absolute" alt="">
+                    <div class="card position-relative">
+                        <div class="card-body px-4 py-4">
+                            
+                            <form action="/auth/register" method="POST">
+                                <div class="mb-4">
+                                    <h5>Welcome to {{siteData.name}}!</h5>
+                                    <p>Please Sign-up to your account</p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="nsofts-input-icon nsofts-input-icon--left">
+                                        <label for="developerName" class="nsofts-input-icon__left">
+                                            <i class="ri-user-line"></i>
+                                        </label>
+                                        <input type="text" name="developerName" id="register_name"  class="form-control" autocomplete="off" placeholder="Enter your username" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="nsofts-input-icon nsofts-input-icon--left">
+                                        <label for="developerEmail" class="nsofts-input-icon__left">
+                                            <i class="ri-at-line"></i>
+                                        </label>
+                                        <input type="text" name="developerEmail" id="register_email"  class="form-control" autocomplete="off" placeholder="Enter your email " required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="nsofts-input-icon nsofts-input-icon--left">
+                                        <label for="developerPassword" class="nsofts-input-icon__left">
+                                             <i class="ri-lock-2-line"></i>
+                                        </label>
+                                        <input type="text" name="developerPassword" id="register_password"  class="form-control" autocomplete="off" placeholder="Enter your password " required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <button  type="submit" name="submit" class="btn btn-primary btn-lg w-100">Register</button>
+                                </div>
+                                <p class="text-center">Already have an account? <a href="/auth/login" class="text-decoration-none">Login</a></p>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+<script type="text/javascript">
+
+
+    window.load = () => {
+        if(!{{success}}){
+            var msgFinal = '';
+            {{#if (isArray error)}}
+                {{#each error}}
+                    msgFinal += '{{this.msg}}\n';
+                    {{!-- {{log this}} --}}
+                {{/each}}
+            {{else}}
+                {{#if (isObject error)}}
+                    msgFinal += '{{error.msg}}\n';
+                    {{!-- {{log error}} --}}
+                {{else}}
+                    msgFinal += '{{error}}\n';
+                    {{!-- console.log('{{error}}'); --}}
+                {{/if}}
+            {{/if}}
+
+            
+
+            $('.notifyjs-corner').empty();
+            $.notify(msgFinal,{
+                position: "top right",
+                className:"error"
+            });
+        }
+        
+    }
+</script>

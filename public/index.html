@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fintech App - Login</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border: 1px solid #334155;
+            box-sizing: border-box;
+        }
+
+        .oauth-btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .oauth-btn:hover {
+            background: #0369a1;
+        }
+
+        .client-info {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 1.5rem;
+            word-break: break-all;
+            background: #090d16;
+            padding: 0.6rem;
+            border-radius: 4px;
+            border: 1px solid #1e293b;
+        }
+
+        pre {
+            background: #090d16;
+            padding: 1rem;
+            text-align: left;
+            border-radius: 6px;
+            color: #4ade80;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card" id="appContent">
+        <h1>Budget Tracker App</h1>
+        <p style="color: #94a3b8;">Connect your bank account to sync your transactions automatically.</p>
+        <br>
+        <button class="oauth-btn" onclick="loginWithBank()">
+            Sign in with Central Bank
+        </button>
+
+        <!-- <div class="client-info" id="activeClientNotice">
+            Loading client configuration...
+        </div> -->
+    </div>
+
+    <script>
+        // Mongo Client ID fallback
+        const CLIENT_ID = localStorage.getItem('active_client_id') || "client_bf008752fc8cb8b220445b42";
+        const REDIRECT_URI = localStorage.getItem('active_redirect_uri') || "http://localhost:5000/callback";
+
+        // Safe DOM check prevents console errors
+        // const noticeEl = document.getElementById('activeClientNotice');
+        // if (noticeEl) {
+        //     noticeEl.innerHTML = `Active Client ID:<br><span style="color: #38bdf8;">${CLIENT_ID}</span>`;
+        // }
+
+        function dec2hex(dec) { return ('0' + dec.toString(16)).substr(-2); }
+        function generateRandomString() {
+            const array = new Uint32Array(28);
+            window.crypto.getRandomValues(array);
+            return Array.from(array, dec2hex).join('');
+        }
+        async function sha256(plain) {
+            const encoder = new TextEncoder();
+            return window.crypto.subtle.digest('SHA-256', encoder.encode(plain));
+        }
+        function base64urlencode(a) {
+            let str = "";
+            const bytes = new Uint8Array(a);
+            for (let i = 0; i < bytes.byteLength; i++) str += String.fromCharCode(bytes[i]);
+            return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+        }
+
+        async function loginWithBank() {
+            const verifier = generateRandomString();
+            const hashed = await sha256(verifier);
+            const challenge = base64urlencode(hashed);
+
+            // STORE IN SESSION STORAGE (Ephemeral: deleted when tab closes)
+            sessionStorage.setItem('pkce_verifier', verifier);
+
+            const authUrl = `/login.html?` + new URLSearchParams({
+                client_id: CLIENT_ID,
+                redirect_uri: REDIRECT_URI,
+                response_type: "code",
+                code_challenge: challenge,
+                code_challenge_method: "S256"
+            }).toString();
+
+            window.location.href = authUrl;
+        }
+
+        async function handleCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                const verifier = sessionStorage.getItem('pkce_verifier');
+
+                try {
+                    const res = await fetch('/oauth/token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            grant_type: "authorization_code",
+                            code: code,
+                            client_id: CLIENT_ID,
+                            redirect_uri: REDIRECT_URI,
+                            code_verifier: verifier
+                        })
+                    });
+
+                    const tokens = await res.json();
+                    window.history.replaceState({}, document.title, window.location.pathname);
+
+                    let userDisplay = "";
+                    if (tokens.access_token) {
+                        try {
+                            const payloadBase64 = tokens.access_token.split('.')[1];
+                            const decodedPayload = JSON.parse(atob(payloadBase64));
+                            userDisplay = `<p style="color: #38bdf8;">Authenticated User ID: <br><strong>${decodedPayload.userId}</strong></p>`;
+                        } catch (e) { }
+                    }
+
+                    document.getElementById('appContent').innerHTML = `
+                        <h2>Access Granted!</h2>
+                        ${userDisplay}
+                        <div style="text-align: left; margin-top: 1rem;">
+                            <label style="font-size: 0.8rem; color: #94a3b8;">ISSUED JWT TOKENS:</label>
+                            <pre>${JSON.stringify(tokens, null, 2)}</pre>
+                        </div>
+                        <button class="oauth-btn" onclick="location.href='/'" style="background: #475569; margin-top: 1rem;">Log Out & Test Another User</button>
+                    `;
+                } finally {
+                    
+                    sessionStorage.removeItem('pkce_verifier');
+                }
+            }
+        }
+
+        handleCallback();
+    </script>
+
+</body>
+
+</html>

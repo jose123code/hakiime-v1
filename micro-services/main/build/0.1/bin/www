@@ -1,0 +1,153 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+const {app, runApp} = require('../app/app');
+var debug = require('debug')('android:server');
+var http = require('http');
+const { PORT, SERVER_ID, doAction } = require("../loaders");
+const socketIO = require('socket.io');
+const { eventManager, applyFilters } = require("../loaders/event");
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+app.set('port', PORT);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+// Create a Socket.io instance attached to the server
+const io = socketIO(server);
+
+// Middleware to make io accessible to all routes
+app.use((req, res, next) => {
+  eventManager.setSharedContext(req, res, null);
+  req.io = io;
+  doAction('init');
+  var config = require("../config/config.json");
+
+  var dbs = applyFilters('init_db',{},config.mongos);
+  if(dbs != null){
+    req.mongodb = dbs.context.req.mongodb;
+    eventManager.setSharedContext(req, dbs.context.res, null);
+  }
+  // Register a callback for the 'finish' event
+  res.on('finish', () => {
+    // This code will be executed after the response is sent
+    doAction('shutdown');
+
+  });
+  next();
+});
+
+
+
+
+// Global middleware for all Socket.IO events
+io.use((socket, next) => {
+  eventManager.setSharedContext({io:socket}, {}, null);
+
+  doAction('init');
+  var config = require("../config/config.json");
+
+  var dbs = applyFilters('init_db',{},config.mongos);
+  if(dbs != null){
+    eventManager.setSharedContext(dbs.context.req, dbs.context.res, null);
+  }
+
+  // Call next() to proceed to the next middleware or event handler
+  next();
+});
+
+
+// Set up a connection event in Socket.io
+io.on('connection', (socket) => {
+
+  console.log('A user connected');
+
+  // Handle custom events
+  socket.on('chat message', (msg) => {
+    console.log(`Message: ${msg}`);
+    // Broadcast the message to all connected clients
+    io.emit('chat message', msg);
+  });
+
+  // Handle disconnect event
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
+
+const initRegistration = require('../loaders/events/init');
+const mongosRegistration = require('../loaders/events/mongos');
+
+
+/** Initialize the app */
+(async () => {
+  runApp();
+})();
+/**
+   * We have an external port from the environment variable. To get this working on heroku,
+   * it's required to specify the host
+   */
+if (process.env.PORT) {
+  server.listen(+PORT, "0.0.0.0", () =>
+    console.log(`Listening on ${PORT}...`)
+  );
+  server.on('error', onError);
+  server.on('listening', onListening);
+} else {
+  server.listen(+PORT, () => console.log(`Listening on ${PORT}...`));
+  server.on('error', onError);
+  server.on('listening', onListening);
+}
+
+
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof PORT === 'string'
+    ? 'Pipe ' + PORT
+    : 'Port ' + PORT;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

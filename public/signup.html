@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create a Central Bank Account</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #16a34a;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 0.85rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #15803d;
+        }
+
+        .nav-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #0284c7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .msg-box {
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .success {
+            color: #16a34a;
+            background: #dcfce7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="logo">Central Bank</div>
+        <div class="subtitle">Open a new account in seconds</div>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="reg-username" placeholder="Choose a username" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="reg-email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="reg-password" placeholder="Create a strong password" required>
+            </div>
+            <button type="submit">Create Account</button>
+            <div id="msgBox" class="msg-box"></div>
+        </form>
+
+        <a href="javascript:history.back()" class="nav-link">← Back to Login</a>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msgBox = document.getElementById('msgBox');
+            msgBox.style.display = 'none';
+            msgBox.className = 'msg-box';
+
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    msgBox.innerText = 'success: ' + data.message + ' Redirecting...';
+                    msgBox.classList.add('success');
+                    msgBox.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.history.back();
+                    }, 2000);
+                } else {
+                    msgBox.innerText = 'Error: ' + (data.error || 'Registration failed');
+                    msgBox.classList.add('error');
+                    msgBox.style.display = 'block';
+                }
+            } catch (err) {
+                msgBox.innerText = 'Network error connecting to server.';
+                msgBox.classList.add('error');
+                msgBox.style.display = 'block';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

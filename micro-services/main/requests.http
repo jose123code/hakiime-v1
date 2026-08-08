@@ -1,0 +1,24 @@
+#Create Product
+POST http://localhost:3000/api/v1/register
+Content-Type: application/json
+
+    {
+        "appName": "Mac Pro",
+        "appURL": "https://hkmcode.com",
+        "developerName": "Hakimu shamavu",
+        "appCallback": "https://hkmcode.com/callback",
+        "developerEmail": "hakimushamavu@gmail.com"
+    }
+    
+### Get products
+GET http://localhost:3000/api/v1/register
+Content-Type: application/json
+
+
+### Update Stock
+PATCH http://localhost:9000/products/3
+Content-Type: application/json
+
+    {
+        "stock": 50
+    }

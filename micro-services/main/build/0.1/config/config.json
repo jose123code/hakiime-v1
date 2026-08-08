@@ -1,0 +1,64 @@
+{
+  "development": {
+    "username": "hkmroot",
+    "password": "bi@+%pa1",
+    "database": "hkmsystem_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "hkmroot",
+    "password": "bi@+%pa1",
+    "database": "hakrgujh_system",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "emailConfig": {
+    "host": "kbtn.org",
+    "port": 587,
+    "secure": false,
+    "auth": {
+      "user": "baraka@kbtn.org",
+      "pass": "Q2Tf4te5Fycgb7ENOQ"
+    },
+    "tls": {
+      "rejectUnauthorized": false
+    }
+  },
+  "rabbitMQ":{ 
+    "hostname": "154.56.46.104", 
+    "password": "bi@+%pa1-rabbitmq", 
+    "username": "admin2" 
+  },
+  "mongos":{
+    "dev":{
+      "hostname": "154.56.46.104", 
+      "user": "service_hkm_3",
+      "pwd": "servi_db_s2_dbserv_only@+%pa1",
+      "port": "28018",
+      "database": "services_db"
+    },
+    "test":{
+      "hostname": "154.56.46.104", 
+      "user": "test",
+      "pwd": "atestmongosdb_s2_me_only@+%pa2",
+      "port": "28018"
+    }
+    
+  },
+  "redis":{
+    "dev":{
+      "port":57901,
+      "username": "lab01",
+      "host":"154.56.46.104",
+      "password": "Xy#7zPq9*1bipa1"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "dev": {
+    "username": "hkmroot",
+    "password": "bi@+%pa1",
+    "database": "hkmsystem_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "prod": {
+    "username": "hkmroot",
+    "password": "bi@+%pa1",
+    "database": "hakrgujh_system",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "emailConfig": {
+    "host": "kbtn.org",
+    "port": 587,
+    "secure": false,
+    "auth": {
+      "user": "baraka@kbtn.org",
+      "pass": "Q2Tf4te5Fycgb7ENOQ"
+    },
+    "tls": {
+      "rejectUnauthorized": false
+    }
+  },
+  "rabbitMQ":{ 
+    "dev":{ 
+      "hostname": "154.56.46.104", 
+      "password": "bi@+%pa1-rabbitmq", 
+      "username": "admin2",
+      "port": 5672
+    },
+    "test":{ 
+      "hostname": "127.0.0.1", 
+      "password": "guest", 
+      "username": "guest",
+      "port":5672
+    } ,
+    "protocol": "amqp",
+    "locale": "en_US",
+    "frameMax": 0,
+    "heartbeat": 0,
+    "vhost": "/"
+  },
+
+  "mongos":{
+    "dev":{
+      "hostname": "154.56.46.104", 
+      "user": "service_hkm_3",
+      "pwd": "servi_db_s2_dbserv_only@+%pa1",
+      "port": "28018",
+      "database": "services_db"
+    },
+    "test":{
+      "hostname": "127.0.0.1", 
+      "user": "service_hkm_3",
+      "pwd": "servi_db_s2_dbserv_only@+%pa1",
+      "port": "28018",
+      "database": "services_db"
+    }
+    
+  },
+  "redis":{
+    "dev":{
+      "port":57901,
+      "username": "lab01",
+      "host":"154.56.46.104",
+      "password": "Xy#7zPq9*1bipa1"
+    },
+    "test":{
+      "port":57901,
+      "username": "test",
+      "host":"127.0.0.1",
+      "password": "Xy#7zPq9*1bipa1"
+    }
+  },
+  "flutterwave":{
+    "dev":{
+      "public_key": "",
+      "secret_key":"",
+      "base_url":""
+    },
+    "test":{
+      "public_key": "",
+      "secret_key":"",
+      "base_url":""
+    }
+  }
+}

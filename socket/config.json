@@ -1,0 +1,28 @@
+{
+    "privateKeyPath": "../../private-key.pem",
+    "publicKeyPath": "../../public-key.pem",
+    "passphrase": "bi@+%pa1hkmcode",
+    
+    "mysqlOptions": {
+      "host": "127.0.0.1", 
+      "user": "vote_7839267", 
+      "password": "db_vote_2023", 
+      "database": "hakrgujh_vote_db", 
+      "waitForConnections": true,
+      "connectionLimit": 10000,
+      "acquireTimeout": 10000,
+      "queueLimit": 10000
+    },
+
+    "redisOptions": {
+      "host": "127.0.0.1", 
+      "port": 7480, 
+      "username": "tester",
+      "password": "test_pas_dHk30381294hJNgdjk"
+    },
+    "serverOptions":{
+      "port": 3000,
+      "host": "localhost"
+    }
+  }
+  

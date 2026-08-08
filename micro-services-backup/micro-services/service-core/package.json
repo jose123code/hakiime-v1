@@ -1,0 +1,32 @@
+{
+  "name": "micro-service-node",
+  "version": "1.0.0",
+  "main": "./dist/main.js",
+  "scripts": {
+    "start": "ts-node -r dotenv/config src/index.ts",
+    "work:hello": "ts-node -r dotenv/config src/services/worker/helloWorker.ts",
+    "work:mailer": "ts-node -r dotenv/config src/services/worker/emailWorker.ts",
+    "send:hello": "ts-node -r dotenv/config src/services/sender/hello.ts",
+    "send:mailer": "ts-node -r dotenv/config src/services/sender/mail.ts",
+    "send:mailUhama": "ts-node -r dotenv/config src/services/sender/mailUhama.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/amqplib": "^0.10.1",
+    "@types/bunyan": "^1.8.8",
+    "@types/ejs": "^3.1.2",
+    "@types/nodemailer": "^6.4.9",
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "nodemailer": "^6.9.4"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.38",
+    "bluebird": "^3.7.2",
+    "bunyan": "^1.8.15",
+    "cdm-logger": "^2.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}

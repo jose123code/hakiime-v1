@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment Files
+.env
+.env.*
+env
+
+# Security & Secret Keys (CRITICAL)
+*.pem
+*.key
+*.crt
+
+# Databases & Runtime Logs
+*.db
+*.lock
+__db.*
+log.*
+hkmcode.services/postgrey/db/
+
+# OS & Editor Junk
+.DS_Store
+.vscode/
+.idea/

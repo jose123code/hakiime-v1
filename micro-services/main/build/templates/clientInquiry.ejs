@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Inquiry Details</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #fff;">
+        <img src="https://uhamatravel.com/Logo.png" alt="Uhama Travel Logo" style="max-width: 150px;">
+        
+        <h2 style="color: #007BFF;">Thank you for your inquiry!</h2>
+        <p>Dear <%= clientFirstName %>,</p>
+        <p>We have received your inquiry and our team will get back to you as soon as possible.</p>
+        
+        <p>Here are the details you provided:</p>
+        <ul style="list-style-type: none; padding: 0;">
+            <li><strong>Name:</strong> <%= clientFirstName %> <%= clientLastName %></li>
+            <li><strong>Email:</strong> <%= clientEmail %></li>
+            <li><strong>Phone:</strong> <%= clientPhone %></li>
+            <li><strong>Number of Travelers:</strong> <%= numTravelers %></li>
+            <li><strong>Destination:</strong> <%= destination %></li>
+            <li><strong>How You Heard About Us:</strong> <%= howHeard %></li>
+        </ul>
+        
+        <p>We look forward to assisting you with your travel plans!</p>
+        
+        <p>Best regards,<br>Uhama Travel</p>
+        <p>African Luxury Safaris<br>123 Safari St, Savanna City<br>555-123-4567<br>info@uhamatravel.com</p>
+    </div>
+</body>
+</html>
