@@ -21,4 +21,4 @@ hkmcode.services/postgrey/db/
 # OS & Editor Junk
 .DS_Store
 .vscode/
-.idea/
+.idea/dump.rdb
