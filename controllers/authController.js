@@ -48,14 +48,13 @@ const registerUser = async (req, res) => {
         };
         await publishToQueue("user_events", eventData);
 
-        // 2. Cache user profile summary in Redis (e.g., 1-hour TTL)
-        if (redisClient && redisClient.isOpen) {
-            await redisClient.set(
-                `user:${user._id}`,
-                JSON.stringify({ id: user._id, username: user.username, email: user.email }),
-                { EX: 3600 }
-            );
-        }
+        // 2. Cache user profile summary in Redis (1-hour TTL)
+        await redis.set(
+            `user:${user._id}`,
+            JSON.stringify({ id: user._id, username: user.username, email: user.email }),
+            "EX",
+            3600
+        );
 
         res.status(201).json({
             message: "User registered successfully."
@@ -93,16 +92,15 @@ const registerClient = async (req, res) => {
 
         await client.save();
 
-        // Cache client metadata in Redis for fast authorization lookups
-        if (redisClient && redisClient.isOpen) {
-            await redisClient.set(
-                `client:${clientId}`,
-                JSON.stringify({ name, redirectUri }),
-                { EX: 86400 } // 24 hours
-            );
-        }
+        // Cache client metadata in Redis for fast authorization lookups (24-hour TTL)
+        await redis.set(
+            `client:${clientId}`,
+            JSON.stringify({ name, redirectUri }),
+            "EX",
+            86400
+        );
 
-        // Publish client creation event
+        // Publish client creation event to RabbitMQ
         await publishToQueue("client_events", {
             eventType: "CLIENT_CREATED",
             clientId,
